@@ -196,16 +196,19 @@ app.post("/inserLocation", async (req, res) => {
     res.send("location Added..");
   } catch (error) {}
 });
-app.post("/GetLocation", async (req, res) => {
-  //console.log(req.body);
-
+app.get("/GetLocation", async (req, res) => {
   try {
-    // checking thr user on DB
-    const Location = require(LocationsModel);
-      
-    const locations= await Location.find();
-    res.status(200).json({location:locations});
-  } catch (error) {}
+    // Fetch all locations from the database
+    const locations = await LocationsModel.find();
+
+    // Send the locations in the response
+    res.status(200).json({ location:locations });
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+
+    // Send error response
+    res.status(500).json({ error: "An error occurred while fetching locations." });
+  }
 });
 app.post("/addItems", async (req, res) => {
   try {
