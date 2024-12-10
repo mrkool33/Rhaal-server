@@ -196,6 +196,17 @@ app.post("/inserLocation", async (req, res) => {
     res.send("location Added..");
   } catch (error) {}
 });
+app.post("/GetLocation", async (req, res) => {
+  //console.log(req.body);
+
+  try {
+    // checking thr user on DB
+    const Location = require(LocationsModel);
+      
+    const locations= await Location.find();
+    res.status(200).json({location:locations});
+  } catch (error) {}
+});
 app.post("/addItems", async (req, res) => {
   try {
     const item = new ItemsModel({
