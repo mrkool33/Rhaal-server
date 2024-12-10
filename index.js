@@ -210,6 +210,20 @@ app.get("/GetLocation", async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching locations." });
   }
 });
+app.get("/GetItem", async (req, res) => {
+  try {
+    // Fetch all item from the database
+    const item = await ItemsModel.find();
+
+    // Send the item in the response
+    res.status(200).json({ Item:item });
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+
+    // Send error response
+    res.status(500).json({ error: "An error occurred while fetching locations." });
+  }
+});
 app.post("/addItems", async (req, res) => {
   try {
     const item = new ItemsModel({
