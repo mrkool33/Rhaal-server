@@ -202,12 +202,47 @@ app.get("/GetLocation", async (req, res) => {
     const locations = await LocationsModel.find();
 
     // Send the locations in the response
-    res.status(200).json({ location:locations });
+    res.status(200).json({ location: locations });
   } catch (error) {
     console.error("Error fetching locations:", error);
 
     // Send error response
-    res.status(500).json({ error: "An error occurred while fetching locations." });
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching locations." });
+  }
+});
+app.delete("/deleteUser/:locationID", async (req, res) => {
+  try {
+    const locationID = req.params.locationID;
+    const delLocation = await LocationsModel.findOneAndDelete({
+      _id: locationID,
+    });
+    if (delLocation) {
+      res.status(200).send({ massege: "user deleted.." });
+    } else {
+      res.status(401).send({ massege: "user not deleted.." });
+    }
+  } catch (error) {}
+});
+app.put("/updateLocation", async (req, res) => {
+  try {
+    const locationID = req.body.locationID;
+    const url = req.body.url;
+    const discrypter = req.body.discrypter;
+    const lat = req.body.lat;
+    const lng = req.body.lng;
+    const city = req.body.city;
+    const state = req.body.state;
+    const category = req.body.category;
+    const rating = req.body.rating;
+    const location = await UserModel.findOne({ _id: locationID });
+    location.ufname = ufname;
+    location.ulname = ulname;
+    await location.save();
+    res.send({ location: location, massege: "location update.." });
+  } catch (error) {
+    return res.status(500).json({ massege: error });
   }
 });
 app.get("/GetItem", async (req, res) => {
@@ -216,12 +251,14 @@ app.get("/GetItem", async (req, res) => {
     const item = await ItemsModel.find();
 
     // Send the item in the response
-    res.status(200).json({ Item:item });
+    res.status(200).json({ Item: item });
   } catch (error) {
     console.error("Error fetching locations:", error);
 
     // Send error response
-    res.status(500).json({ error: "An error occurred while fetching locations." });
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching locations." });
   }
 });
 app.post("/addItems", async (req, res) => {
