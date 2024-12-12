@@ -212,7 +212,7 @@ app.get("/GetLocation", async (req, res) => {
       .json({ error: "An error occurred while fetching locations." });
   }
 });
-app.delete("/deleteUser/:locationID", async (req, res) => {
+app.delete("/deleteLocation/:locationID", async (req, res) => {
   try {
     const locationID = req.params.locationID;
     const delLocation = await LocationsModel.findOneAndDelete({
@@ -271,6 +271,19 @@ app.post("/addItems", async (req, res) => {
     });
     await item.save();
     res.send("item Added..");
+  } catch (error) {}
+});
+app.delete("/deleteItem/:ItemID", async (req, res) => {
+  try {
+    const ItemID = req.params.ItemID;
+    const delItem = await ItemsModel.findOneAndDelete({
+      _id: ItemID,
+    });
+    if (delItem) {
+      res.status(200).send({ massege: "user deleted.." });
+    } else {
+      res.status(401).send({ massege: "user not deleted.." });
+    }
   } catch (error) {}
 });
 app.delete("/deleteUser/:userID", async (req, res) => {
