@@ -314,8 +314,7 @@ app.put("/updateUser", async (req, res) => {
   }
 });
 
-const db =
-  "mongodb+srv://mangomanutas:mangoman1234@cluster0.271ea.mongodb.net/rahaal?retryWrites=true&w=majority&appName=Cluster0";
+const db = process.env.MONGO_URI;
 
 mongoose.connect(db);
 
