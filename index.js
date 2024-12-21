@@ -19,26 +19,28 @@ app.use(express.json());
 
 app.post("/login", async (req, res) => {
   try {
-    const user = await UserModel.findOne({ email: req.body.email });
-    if (!user) {
-      return res.status(500).json({ massege: "User Not Found..." });
-    } else {
-      const match = await bcrypt.compare(req.body.password, user.password);
-      if (match)
-        return res.status(200).json({ user: user, message: "Seccess" });
-      else return res.status(401).send({ massege: "Invalid Credentials " });
-    }
-  } catch (error) {
-    return res.status(500).json({ massege: error });
-  }
-});
-app.post("/logout", async (req, res) => {
-  try {
-    //clareing the seesion
+    const { email, password } = req.body;
 
-    return res.send("logout secceful..");
+    // Check if the user exists
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Wrong username or password." });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Wrong username or password." });
+    }
+
+    // If successful, send user data (without password)
+    const { password: _, ...userWithoutPassword } = user._doc;
+    return res
+      .status(200)
+      .json({ user: userWithoutPassword, message: "login" });
   } catch (error) {
-    return res.status(500).json({ massege: error });
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
