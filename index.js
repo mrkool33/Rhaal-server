@@ -50,9 +50,9 @@ app.post("/inserUser", async (req, res) => {
     const user = await UserModel.findOne({ email: req.body.email });
     const phone = await UserModel.findOne({ phone: req.body.phone });
     if (user) {
-      res.status(400).send("use another email");
+      res.status(400).send("email is already exists");
     } else if (phone) {
-      res.status(400).send("change phone number");
+      res.status(400).send("phone number is already exists");
     } else {
       const match = await bcrypt.hash(req.body.password, 10);
 
